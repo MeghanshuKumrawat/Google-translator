@@ -28,5 +28,6 @@ cd Google-translator
 python google translator.py
 ```
 
-#Output :-
-![output image](https://github.com/MeghanshuKumrawat/Google-translator/Output.png)
+# Output :-
+
+![output image](https://github.com/MeghanshuKumrawat/Google-translator/blob/master/Output.png)
