@@ -1,8 +1,13 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter.scrolledtext import ScrolledText
+import speech_recognition as sr
 from googletrans import Translator
 from tkinter import messagebox
+from gtts import gTTS
+import playsound
+import random
+import os
 
 
 class Google_translator:
@@ -11,7 +16,9 @@ class Google_translator:
         self.root.title('Google Translator')
         self.root.geometry('280x460')
         self.root.config(bg="#4285F4")
-        self.google_logo = PhotoImage(file='logo.png')
+        self.google_logo = PhotoImage(file='img\\logo.png')
+        self.mic_img = PhotoImage(file="img\\microphone.png")
+        self.speaker_img = PhotoImage(file="img\\speaker (1).png")
 
         self.input_text = ScrolledText(self.root, width=30, height=7)
         self.input_text.place(x=10, y=10)
@@ -144,6 +151,10 @@ class Google_translator:
         clear = Button(self.root, text="Clear", cursor="hand2", width=10, command=self.clear)
         clear.place(x=10, y=350)
 
+        Button(self.root, image=self.mic_img, bd=0, bg="white", command=self.listen).place(x=220, y=90)
+
+        Button(self.root, image=self.speaker_img, bd=0, bg="white", command=self.speak).place(x=220, y=303)
+
         Label(root, image=self.google_logo).place(x=10, y=390)
         Label(root, text="Google", font=('arial black', 30), bg="#4285F4", fg="white").place(x=100, y=385)
 
@@ -167,6 +178,22 @@ class Google_translator:
         self.output_text.clipboard_clear()
         self.output_text.clipboard_append(self.output_text.get(1.0, END))
 
+    def speak(self):
+        tts = gTTS(text=self.output_text.get(1.0, END), lang="en")
+        r = random.randint(0, 100000)
+        audio_file = "audio-"+str(r)+".mp3"
+        tts.save(audio_file)
+        playsound.playsound(audio_file)
+        os.remove(audio_file)
+
+    def listen(self):
+        r = sr.Recognizer()
+        with sr.Microphone() as source:
+            audio = r.listen(source)
+            string = ""
+            string = r.recognize_google(audio)
+            self.input_text.delete("1.0", END)
+            self.input_text.insert(END, string)
 
 root = Tk()
 ob = Google_translator(root)
